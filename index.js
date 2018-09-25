@@ -6,17 +6,9 @@ const command = {
 };
 
 const exitProcess = (message, escapeCode) => {
-  process.on(`exit`, () => {
-    if (!escapeCode) {
-      console.log(message);
-    } else {
-      console.error(message);
-    }
-  });
+  !escapeCode ? console.log(message) : console.error(message);
   process.exit(escapeCode);
 }
-
-process.stdout.write('\x1Bc');
 
 const userCommand = process.argv[2];
 
