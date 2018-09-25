@@ -5,15 +5,7 @@ const command = {
   VERSION: `--version`
 };
 
-const readline = require(`readline`);
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-const closeInterface = (message, escapeCode) => {
-  rl.close();
+const exitProcess = (message, escapeCode) => {
   process.on(`exit`, () => {
     if (!escapeCode) {
       console.log(message);
@@ -24,14 +16,16 @@ const closeInterface = (message, escapeCode) => {
   process.exit(escapeCode);
 }
 
-rl.question(`Введите команду для выполнения\n`, (currentCommand) => {
-  if (!currentCommand) {
-    closeInterface(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм».\nАвтор: Василий Шубин.`, ESCAPE_CODE_FAILURE);
-  } else if (currentCommand === command.HELP) {
-    closeInterface(`Доступные команды:\n--version\n--help`, ESCAPE_CODE_SUCCESS);
-  } else if (currentCommand === command.VERSION) {
-    closeInterface(`v0.0.1`, ESCAPE_CODE_SUCCESS);
-  } else {
-    closeInterface(`Неизвестная команда: ${currentCommand}\nЧтобы прочитать правила использования приложения, наберите "--help`, ESCAPE_CODE_FAILURE);
-  }
-});
+process.stdout.write('\x1Bc');
+
+const userCommand = process.argv[2];
+
+if (!userCommand) {
+  exitProcess(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм».\nАвтор: Василий Шубин.`, ESCAPE_CODE_FAILURE);
+} else if (userCommand === command.HELP) {
+  exitProcess(`Доступные команды:\n--version\n--help`, ESCAPE_CODE_SUCCESS);
+} else if (userCommand === command.VERSION) {
+  exitProcess(`v0.0.1`, ESCAPE_CODE_SUCCESS);
+} else {
+  exitProcess(`Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`, ESCAPE_CODE_FAILURE);
+}
