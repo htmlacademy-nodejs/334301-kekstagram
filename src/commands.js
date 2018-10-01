@@ -1,27 +1,29 @@
 'use strict';
 
 let colors = require(`colors/safe`);
-const command = {
-  author: require(`./author`),
-  description: require(`./description`),
-  help: require(`./help`),
-  license: require(`./license`),
-  version: require(`./version`)
-};
+const author = require(`./author`);
+const description = require(`./description`);
+const help = require(`./help`);
+const license = require(`./license`);
+const version = require(`./version`);
 
-const ESCAPE_CODE_FAILURE = 1;
+const command = {
+  author,
+  description,
+  help,
+  license,
+  version
+};
 
 const allCommands = [];
 
-for (const singleCommand in command) {
-  if (command.hasOwnProperty(singleCommand)) {
-    allCommands.push(
-        {
-          name: command[singleCommand].name,
-          description: command[singleCommand].description
-        }
-    );
-  }
+for (const singleCommand of Object.values(command)) {
+  allCommands.push(
+      {
+        name: singleCommand.name,
+        description: singleCommand.description
+      }
+  );
 }
 
 command.help.availableCommands = allCommands.slice();
@@ -36,22 +38,19 @@ if (process.argv[2] && process.argv[2].length > 2 && process.argv[2][0] === `-` 
 }
 
 if (!userCommand) {
-  console.error(colors.magenta(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`));
-  process.exit(ESCAPE_CODE_FAILURE);
-}
-
-for (let i = 0; i < allCommands.length; i++) {
-  if (allCommands[i].name === userCommand) {
-    executableFunction = () => {
-      command[userCommand].execute();
-    };
-    break;
-  }
-}
-
-if (!executableFunction) {
-  console.error(colors.red(`Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`));
-  process.exit(ESCAPE_CODE_FAILURE);
+  executableFunction = () => {
+    console.error(colors.magenta(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`));
+  };
+} else if (allCommands.find((item) => {
+  return item.name === userCommand;
+})) {
+  executableFunction = () => {
+    command[userCommand].execute();
+  };
+} else {
+  executableFunction = () => {
+    console.error(colors.red(`Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`));
+  };
 }
 
 module.exports = {
