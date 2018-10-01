@@ -1,6 +1,6 @@
 'use strict';
 
-let colors = require(`colors`);
+let colors = require(`colors/safe`);
 const command = {
   author: require(`./author`),
   description: require(`./description`),
@@ -14,12 +14,14 @@ const ESCAPE_CODE_FAILURE = 1;
 const allCommands = [];
 
 for (const singleCommand in command) {
-  allCommands.push(
-      {
-        name: command[singleCommand].name,
-        description: command[singleCommand].description
-      }
-  );
+  if (command.hasOwnProperty(singleCommand)) {
+    allCommands.push(
+        {
+          name: command[singleCommand].name,
+          description: command[singleCommand].description
+        }
+    );
+  }
 }
 
 command.help.availableCommands = allCommands.slice();
@@ -34,7 +36,7 @@ if (process.argv[2] && process.argv[2].length > 2 && process.argv[2][0] === `-` 
 }
 
 if (!userCommand) {
-  console.error(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`.magenta);
+  console.error(colors.magenta(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`));
   process.exit(ESCAPE_CODE_FAILURE);
 }
 
@@ -48,7 +50,7 @@ for (let i = 0; i < allCommands.length; i++) {
 }
 
 if (!executableFunction) {
-  console.error(`Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`.red);
+  console.error(colors.red(`Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`));
   process.exit(ESCAPE_CODE_FAILURE);
 }
 

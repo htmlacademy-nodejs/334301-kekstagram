@@ -1,6 +1,6 @@
 'use strict';
 
-let colors = require(`colors`);
+let colors = require(`colors/safe`);
 
 module.exports = {
   name: `help`,
@@ -9,7 +9,7 @@ module.exports = {
   execute() {
     console.log(`Доступные команды:`);
     this.availableCommands.forEach((command) => {
-      console.log(`${command.name.red}: ${command.description.green}`);
+      console.log(`${colors.red(command.name)}: ${colors.green(command.description)}`);
     });
   }
 };
