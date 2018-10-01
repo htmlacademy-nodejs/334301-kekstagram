@@ -3,7 +3,11 @@
 module.exports = {
   name: `help`,
   description: `Список доступных команд`,
+  availableCommands: [],
   execute() {
-    console.log(`Доступные команды:\n--author\n--description\n--help\n--license\n--version`);
+    console.log(`Доступные команды:`);
+    this.availableCommands.forEach((command) => {
+      console.log(`${command}`);
+    })
   }
 };
