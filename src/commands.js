@@ -1,6 +1,6 @@
 'use strict';
 
-var colors = require('colors');
+let colors = require(`colors`);
 const command = {
   author: require(`./author`),
   description: require(`./description`),
@@ -15,10 +15,10 @@ const allCommands = [];
 
 for (const singleCommand in command) {
   allCommands.push(
-    {
-      name: command[singleCommand].name,
-      description: command[singleCommand].description
-    }
+      {
+        name: command[singleCommand].name,
+        description: command[singleCommand].description
+      }
   );
 }
 
@@ -41,7 +41,7 @@ if (!userCommand) {
 for (let i = 0; i < allCommands.length; i++) {
   if (allCommands[i].name === userCommand) {
     executableFunction = () => {
-      command[userCommand].execute()
+      command[userCommand].execute();
     };
     break;
   }
