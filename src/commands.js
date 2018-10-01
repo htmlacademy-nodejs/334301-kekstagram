@@ -7,6 +7,8 @@ const help = require(`./help`);
 const license = require(`./license`);
 const version = require(`./version`);
 
+const ESCAPE_CODE_FAILURE = 1;
+
 const command = {
   author,
   description,
@@ -39,7 +41,7 @@ if (process.argv[2] && process.argv[2].length > 2 && process.argv[2][0] === `-` 
 
 if (!userCommand) {
   executableFunction = () => {
-    console.error(colors.magenta(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`));
+    console.log(colors.magenta(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`));
   };
 } else if (allCommands.find((item) => {
   return item.name === userCommand;
@@ -50,6 +52,7 @@ if (!userCommand) {
 } else {
   executableFunction = () => {
     console.error(colors.red(`Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`));
+    process.exit(ESCAPE_CODE_FAILURE);
   };
 }
 
