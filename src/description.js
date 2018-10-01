@@ -6,6 +6,6 @@ module.exports = {
   name: `description`,
   description: `Вывод описания программы`,
   execute() {
-    console.log(`Описание программы: ${packageInfo.description}`);
+    console.log(`Описание программы: ${packageInfo.description.rainbow}`);
   }
 };

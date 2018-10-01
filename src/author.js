@@ -6,6 +6,6 @@ module.exports = {
   name: `author`,
   description: `Автор программы`,
   execute() {
-    console.log(`Автор программы: ${packageInfo.author}`);
+    console.log(`Автор программы: ${packageInfo.author.cyan}`);
   }
 };
