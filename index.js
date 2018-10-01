@@ -1,3 +1,5 @@
+'use strict';
+
 const ESCAPE_CODE_SUCCESS = 0;
 const ESCAPE_CODE_FAILURE = 1;
 const command = {
@@ -6,9 +8,13 @@ const command = {
 };
 
 const exitProcess = (message, escapeCode) => {
-  !escapeCode ? console.log(message) : console.error(message);
-  process.exit(escapeCode);
-}
+  if (!escapeCode) {
+    console.log(message);
+  } else {
+    console.error(message);
+    process.exit(escapeCode);
+  }
+};
 
 const userCommand = process.argv[2];
 

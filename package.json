@@ -1,0 +1,25 @@
+{
+  "name": "kekstagram",
+  "version": "1.0.0",
+  "description": "kekstagram personal project",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "5.6.1",
+    "eslint-config-htmlacademy": "0.5.2"
+  },
+  "scripts": {
+    "test:lint": "eslint .",
+    "test": "npm run test:lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nitraatss/334301-kekstagram-1.git"
+  },
+  "author": "V. Shubin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nitraatss/334301-kekstagram-1/issues"
+  },
+  "homepage": "https://github.com/Nitraatss/334301-kekstagram-1#readme"
+}
