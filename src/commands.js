@@ -11,14 +11,18 @@ const command = {
 
 const ESCAPE_CODE_FAILURE = 1;
 
+const allCommands = [];
+
 for (const singleCommand in command) {
-  command.help.availableCommands.push(
+  allCommands.push(
     {
       name: command[singleCommand].name,
       description: command[singleCommand].description
     }
   );
 }
+
+command.help.availableCommands = allCommands.slice();
 
 let userCommand;
 let executableFunction;
@@ -34,8 +38,8 @@ if (!userCommand) {
   process.exit(ESCAPE_CODE_FAILURE);
 }
 
-for (let i = 0; i < command.help.availableCommands.length; i++) {
-  if (command.help.availableCommands[i].name === userCommand) {
+for (let i = 0; i < allCommands.length; i++) {
+  if (allCommands[i].name === userCommand) {
     executableFunction = () => {
       command[userCommand].execute()
     };
