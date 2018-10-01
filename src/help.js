@@ -9,7 +9,7 @@ module.exports = {
   execute() {
     console.log(`Доступные команды:`);
     this.availableCommands.forEach((command) => {
-      console.log(`${colors.red(command.name)}: ${colors.green(command.description)}`);
+      console.log(`--${colors.red(command.name)}: ${colors.green(command.description)}`);
     });
   }
 };
