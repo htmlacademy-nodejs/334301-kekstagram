@@ -114,8 +114,11 @@ describe(`Data Generator`, function () {
   });
 
   describe(`Date field`, function () {
-    it(`returns UNIX timestamp minus 7 seven days from now`, function () {
-      assert.equal(dataGenerator.generateEntity().date, Math.floor((Date.now() - (24 * 60 * 60 * 1000) * 7) / 1000 / 60 / 60 / 24));
+    it(`returns UNIX timestamp from one of last 7 days`, function () {
+      assert.equal(helpers.checkTimestamp(dataGenerator.generateEntity().date), true);
+      assert.equal(helpers.checkTimestamp(dataGenerator.generateEntity().date), true);
+      assert.equal(helpers.checkTimestamp(dataGenerator.generateEntity().date), true);
+      assert.equal(helpers.checkTimestamp(dataGenerator.generateEntity().date), true);
     });
   });
 });

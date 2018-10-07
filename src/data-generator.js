@@ -57,6 +57,14 @@ const generateRandomComments = () => {
   return newComments;
 };
 
+const generateRandomTimeStamp = () => {
+  const daysOffset = getRandomInt(0, 6);
+
+  const newTimestamp = Math.floor(Date.now()) - daysOffset * (24 * 60 * 60 * 1000);
+
+  return newTimestamp;
+};
+
 const generateEntity = () => {
   return ({
     "url": `https://picsum.photos/600/?random`,
@@ -66,7 +74,7 @@ const generateEntity = () => {
     "description": generateRandomText(MAXIMUM_TEXT_LENGTH),
     "likes": getRandomInt(0, MAXIMUM_LIKES_NUMBER),
     "comments": generateRandomComments(),
-    "date": Math.floor((Date.now() - (24 * 60 * 60 * 1000) * 7) / 1000 / 60 / 60 / 24)
+    "date": generateRandomTimeStamp()
   });
 };
 
