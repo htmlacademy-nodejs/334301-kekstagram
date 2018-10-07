@@ -27,31 +27,31 @@ describe(`Data Generator`, function () {
     assert.equal(typeof newObject.date, `number`);
   });
 
-  describe('URL field', function(){
+  describe(`URL field`, function () {
     it(`contains address to ${dataGenerator.PICTURE_SIZE} picture size`, function () {
       assert.equal(helpers.checkURL(dataGenerator.generateEntity().url), dataGenerator.PICTURE_SIZE);
     });
-  })
+  });
 
-  describe('Scale field', function(){
+  describe(`Scale field`, function () {
     it(`contains number from 0 to 100`, function () {
       assert.equal(helpers.checkScale(dataGenerator.generateEntity().scale), true);
       assert.equal(helpers.checkScale(dataGenerator.generateEntity().scale), true);
       assert.equal(helpers.checkScale(dataGenerator.generateEntity().scale), true);
       assert.equal(helpers.checkScale(dataGenerator.generateEntity().scale), true);
     });
-  })
+  });
 
-  describe('Effect field', function(){
+  describe(`Effect field`, function () {
     it(`contains one of possible effects`, function () {
       assert.equal(helpers.checkEffects(dataGenerator.generateEntity().effect), true);
       assert.equal(helpers.checkEffects(dataGenerator.generateEntity().effect), true);
       assert.equal(helpers.checkEffects(dataGenerator.generateEntity().effect), true);
       assert.equal(helpers.checkEffects(dataGenerator.generateEntity().effect), true);
     });
-  })
+  });
 
-  describe('Hashtag field', function(){
+  describe(`Hashtag field`, function () {
     it(`has maximum ${dataGenerator.MAXIMUM_HASHTAGS_NUMBER} elements`, function () {
       assert.equal(dataGenerator.generateEntity().hashtags.length <= dataGenerator.MAXIMUM_HASHTAGS_NUMBER, true);
       assert.equal(dataGenerator.generateEntity().hashtags.length <= dataGenerator.MAXIMUM_HASHTAGS_NUMBER, true);
@@ -83,27 +83,27 @@ describe(`Data Generator`, function () {
       assert.equal(helpers.checkHashtagsCopies(dataGenerator.generateEntity().hashtags), true);
       assert.equal(helpers.checkHashtagsCopies(dataGenerator.generateEntity().hashtags), true);
     });
-  })
+  });
 
-  describe('Description field', function(){
+  describe(`Description field`, function () {
     it(`length less then ${dataGenerator.MAXIMUM_TEXT_LENGTH}`, function () {
       assert.equal(dataGenerator.generateEntity().description.length <= dataGenerator.MAXIMUM_TEXT_LENGTH, true);
       assert.equal(dataGenerator.generateEntity().description.length <= dataGenerator.MAXIMUM_TEXT_LENGTH, true);
       assert.equal(dataGenerator.generateEntity().description.length <= dataGenerator.MAXIMUM_TEXT_LENGTH, true);
       assert.equal(dataGenerator.generateEntity().description.length <= dataGenerator.MAXIMUM_TEXT_LENGTH, true);
     });
-  })
+  });
 
-  describe('Likes field', function(){
+  describe(`Likes field`, function () {
     it(`maximum value is ${dataGenerator.MAXIMUM_LIKES_NUMBER}`, function () {
       assert.equal(dataGenerator.generateEntity().likes <= dataGenerator.MAXIMUM_LIKES_NUMBER, true);
       assert.equal(dataGenerator.generateEntity().likes <= dataGenerator.MAXIMUM_LIKES_NUMBER, true);
       assert.equal(dataGenerator.generateEntity().likes <= dataGenerator.MAXIMUM_LIKES_NUMBER, true);
       assert.equal(dataGenerator.generateEntity().likes <= dataGenerator.MAXIMUM_LIKES_NUMBER, true);
     });
-  })
+  });
 
-  describe('Comments field', function(){
+  describe(`Comments field`, function () {
     it(`maximum comment length is ${dataGenerator.MAXIMUM_COMMENT_LENGTH}`, function () {
       assert.equal(helpers.checkCommentLength(dataGenerator.generateEntity().comments), true);
       assert.equal(helpers.checkCommentLength(dataGenerator.generateEntity().comments), true);
@@ -111,11 +111,11 @@ describe(`Data Generator`, function () {
       assert.equal(helpers.checkCommentLength(dataGenerator.generateEntity().comments), true);
       assert.equal(helpers.checkCommentLength(dataGenerator.generateEntity().comments), true);
     });
-  })
+  });
 
-  describe('Date field', function(){
+  describe(`Date field`, function () {
     it(`returns UNIX timestamp minus 7 seven days from now`, function () {
-      assert.equal(dataGenerator.generateEntity().date, Math.floor((Date.now() - (24*60*60*1000) * 7)/1000 / 60 / 60 / 24));
+      assert.equal(dataGenerator.generateEntity().date, Math.floor((Date.now() - (24 * 60 * 60 * 1000) * 7) / 1000 / 60 / 60 / 24));
     });
-  })
+  });
 });
