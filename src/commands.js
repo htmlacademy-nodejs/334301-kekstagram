@@ -6,6 +6,7 @@ const description = require(`./description`);
 const help = require(`./help`);
 const license = require(`./license`);
 const version = require(`./version`);
+const interrogation = require(`./interrogation`);
 
 const ESCAPE_CODE_FAILURE = 1;
 
@@ -18,6 +19,8 @@ const command = {
 };
 
 const allCommands = [];
+let userCommand;
+let executableFunction;
 
 for (const singleCommand of Object.values(command)) {
   allCommands.push(
@@ -30,9 +33,6 @@ for (const singleCommand of Object.values(command)) {
 
 command.help.availableCommands = allCommands.slice();
 
-let userCommand;
-let executableFunction;
-
 if (process.argv[2] && process.argv[2].length > 2 && process.argv[2][0] === `-` && process.argv[2][1] === `-`) {
   userCommand = process.argv[2].slice(2);
 } else {
@@ -42,6 +42,8 @@ if (process.argv[2] && process.argv[2].length > 2 && process.argv[2][0] === `-` 
 if (!userCommand) {
   executableFunction = () => {
     console.log(colors.magenta(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`));
+
+    interrogation.startInterrogationWithUser();
   };
 } else if (allCommands.find((item) => {
   return item.name === userCommand;
