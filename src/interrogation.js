@@ -5,6 +5,15 @@ const dataGenerator = require(`./data-generator`);
 
 const entities = [];
 
+const createInterface = () => {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return rl;
+};
+
 const saveFile = (filePath, data) => {
   fs.writeFile(filePath, data, (writeErr) => {
     if (writeErr) {
@@ -15,13 +24,8 @@ const saveFile = (filePath, data) => {
   });
 };
 
-const updateFile = (filePath, data, previousRl) => {
-  previousRl.close();
-
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+const updateFile = (filePath, data) => {
+  const rl = createInterface();
 
   console.log(`По указаному пути уже существует аналогичный файл, хотите перезаписать его?\nВведите yes для обновления файла или no для отмены операции`);
 
@@ -45,7 +49,15 @@ const updateFile = (filePath, data, previousRl) => {
   });
 };
 
-const saveEntities = (path, newData, rl) => {
+const saveEntities = (newData) => {
+  const rl = createInterface();
+
+  let path;
+
+  rl.question(`Укажите путь до файла для сохранения данных\n`, (newPath) => {
+    path = newPath;
+  });
+
   const formedData = JSON.stringify(newData);
 
   fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
@@ -55,69 +67,47 @@ const saveEntities = (path, newData, rl) => {
         saveFile(path, formedData);
       } else {
         console.error(`Файл уже существует и не доступен только для чтения`);
+        process.exit(1);
       }
     } else {
-      updateFile(path, formedData, rl);
+      rl.close();
+      updateFile(path, formedData);
     }
   });
 };
 
-const checkEntitiesNumber = (testNumber) => {
-  if (parseInt(testNumber, 10) && parseInt(testNumber, 10) > 0) {
-    return true;
-  } else {
-    return false;
-  }
-};
+const formEntities = (newEntities) => {
+  const rl = createInterface();
+  const data = newEntities;
 
-const formEntities = (newEntitesNumber, newEntites, previousRl) => {
-  previousRl.close();
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+  console.log(`Укажите желаемое колличество сущностей`);
 
-  if (checkEntitiesNumber(newEntitesNumber)) {
-    console.log(`Цифра подходит`);
-    for (let i = 0; i < parseInt(newEntitesNumber, 10); i++) {
-      newEntites.push(dataGenerator.generateEntity());
-    }
-    rl.question(`Укажите путь до файла для сохранения данных\n`, (path) => {
-      saveEntities(path, newEntites, rl);
-    });
-  } else {
-    console.log(`Повторите ввод`);
-    rl.on(`line`, (number) => {
-      if (checkEntitiesNumber(number)) {
-        console.log(`Цифра подходит`);
-        for (let i = 0; i < parseInt(number, 10); i++) {
-          newEntites.push(dataGenerator.generateEntity());
-        }
-        rl.question(`Укажите путь до файла для сохранения данных\n`, (path) => {
-          saveEntities(path, newEntites, rl);
-        });
-      } else {
-        console.log(`Повторите ввод`);
+  rl.on(`line`, (number) => {
+    if (parseInt(number, 10) && parseInt(number, 10) > 0) {
+      console.log(`Цифра подходит`);
+      for (let i = 0; i < parseInt(number, 10); i++) {
+        data.push(dataGenerator.generateEntity());
       }
-    });
-  }
+      rl.close();
+    } else {
+      console.log(`Повторите ввод`);
+    }
+  });
 };
 
-const startInterrogationWithUser = () => {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+const startProcess = (inputArray) => {
+  const rl = createInterface();
 
   console.log(`Хотите сгенерировать данные?\nВведи yes для генерации или no для завершения программы`);
 
   rl.on(`line`, (command) => {
     switch (command.trim().toLowerCase()) {
       case `yes`:
-        rl.question(`Укажите желаемое колличество сущностей\n`, (number) => {
-          formEntities(number, entities, rl);
-        });
+      {
+        rl.close();
+        return inputArray;
         break;
+      }
       case `no`:
       {
         console.log(`Программа завершена!`);
@@ -129,6 +119,15 @@ const startInterrogationWithUser = () => {
         console.log(`Повторите ввод`);
         break;
     }
+  });
+};
+
+const startInterrogationWithUser = () => {
+  Promise.resolve(entities)
+  .then(startProcess)
+  .then(formEntities)
+  .catch((error) => {
+    console.log(error);
   });
 };
 
