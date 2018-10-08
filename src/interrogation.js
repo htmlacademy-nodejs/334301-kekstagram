@@ -1,4 +1,6 @@
 'use strict';
+
+let colors = require(`colors/safe`);
 const readline = require(`readline`);
 const fs = require(`fs`);
 const dataGenerator = require(`./data-generator`);
@@ -8,7 +10,8 @@ const entities = [];
 const createInterface = () => {
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
+    prompt: `Write here> `
   });
 
   return rl;
@@ -19,7 +22,7 @@ const saveFile = (filePath, data) => {
     if (writeErr) {
       throw writeErr;
     }
-    console.log(`Файл был сохранен`);
+    console.log(colors.green(`Файл был сохранен`));
     process.exit();
   });
 };
@@ -27,7 +30,9 @@ const saveFile = (filePath, data) => {
 const updateFile = (filePath, data) => {
   const rl = createInterface();
 
-  console.log(`По указаному пути уже существует аналогичный файл, хотите перезаписать его?\nВведите yes для обновления файла или no для отмены операции`);
+  console.log(`По указаному пути уже существует аналогичный файл, хотите перезаписать его?\nВведите ${colors.green(`yes`)} для обновления файла или ${colors.red(`no`)} для отмены операции`);
+
+  rl.prompt();
 
   rl.on(`line`, (command) => {
     switch (command.trim().toLowerCase()) {
@@ -37,97 +42,128 @@ const updateFile = (filePath, data) => {
         break;
       case `no`:
       {
-        console.log(`Программа завершена!`);
+        console.log(colors.red(`Выберите другой файл`));
         rl.close();
-        process.exit();
+        saveEntities(data);
         break;
       }
       default:
-        console.log(`Неизвестная команда: ${command.trim()}`);
+        console.log(colors.red(`Неизвестная команда: ${command.trim()}`));
         break;
     }
+    rl.prompt();
   });
 };
 
 const saveEntities = (newData) => {
   const rl = createInterface();
+  const formedData = JSON.stringify(newData);
 
   let path;
 
-  rl.question(`Укажите путь до файла для сохранения данных\n`, (newPath) => {
+  console.log(`Укажите путь до файла для сохранения данных`);
+
+  rl.prompt();
+
+  rl.on(`line`, (newPath) => {
     path = newPath;
-  });
 
-  const formedData = JSON.stringify(newData);
-
-  fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
-    if (err) {
-      if (err.code === `ENOENT`) {
-        rl.close();
-        saveFile(path, formedData);
+    fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+      if (err) {
+        if (err.code === `ENOENT`) {
+          rl.close();
+          saveFile(path, formedData);
+        } else {
+          console.error(colors.red(`Файл уже существует и не доступен только для чтения`));
+          console.log(colors.red(`Выберите другой файл`));
+        }
       } else {
-        console.error(`Файл уже существует и не доступен только для чтения`);
-        process.exit(1);
+        rl.close();
+        updateFile(path, formedData);
       }
-    } else {
-      rl.close();
-      updateFile(path, formedData);
-    }
+    });
   });
+
+  // rl.question(`Укажите путь до файла для сохранения данных\n`, (newPath) => {
+  //   path = newPath;
+  //
+  //   fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+  //     if (err) {
+  //       if (err.code === `ENOENT`) {
+  //         rl.close();
+  //         saveFile(path, formedData);
+  //       } else {
+  //         console.error(colors.red(`Файл уже существует и не доступен только для чтения`));
+  //         process.exit(1);
+  //       }
+  //     } else {
+  //       rl.close();
+  //       updateFile(path, formedData);
+  //     }
+  //   });
+  // });
 };
 
-const formEntities = (newEntities) => {
+const formEntities = (newEntities) => new Promise((resolve) => {
   const rl = createInterface();
   const data = newEntities;
 
   console.log(`Укажите желаемое колличество сущностей`);
 
+  rl.prompt();
+
   rl.on(`line`, (number) => {
     if (parseInt(number, 10) && parseInt(number, 10) > 0) {
-      console.log(`Цифра подходит`);
       for (let i = 0; i < parseInt(number, 10); i++) {
         data.push(dataGenerator.generateEntity());
       }
       rl.close();
+      console.log(`Создано ${colors.blue(number)} сущностей`);
+      resolve(data);
     } else {
-      console.log(`Повторите ввод`);
+      console.log(colors.red(`Повторите ввод`));
+      rl.prompt();
     }
   });
-};
+});
 
-const startProcess = (inputArray) => {
+const startProcess = (inputArray) => new Promise((resolve) => {
   const rl = createInterface();
 
-  console.log(`Хотите сгенерировать данные?\nВведи yes для генерации или no для завершения программы`);
+  console.log(`Хотите сгенерировать данные?\nВведи ${colors.green(`yes`)} для генерации или ${colors.red(`no`)} для завершения программы`);
+
+  rl.prompt();
 
   rl.on(`line`, (command) => {
     switch (command.trim().toLowerCase()) {
       case `yes`:
       {
         rl.close();
-        return inputArray;
+        resolve(inputArray);
         break;
       }
       case `no`:
       {
-        console.log(`Программа завершена!`);
         rl.close();
+        console.log(colors.green(`Программа завершена!`));
         process.exit();
         break;
       }
       default:
-        console.log(`Повторите ввод`);
+        console.log(colors.red(`Повторите ввод`));
         break;
     }
+    rl.prompt();
   });
-};
+});
 
 const startInterrogationWithUser = () => {
   Promise.resolve(entities)
   .then(startProcess)
   .then(formEntities)
+  .then(saveEntities)
   .catch((error) => {
-    console.log(error);
+    console.error(error);
   });
 };
 
