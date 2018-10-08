@@ -82,13 +82,8 @@ const checkCommentLength = (comments) => {
 };
 
 const checkTimestamp = (currentTimestamp) => {
-  const weekTimestamps = [];
 
-  for (let i = 0; i < 7; i++) {
-    weekTimestamps.push(Math.floor(Date.now()) - i * (24 * 60 * 60 * 1000));
-  }
-
-  if (weekTimestamps.indexOf(currentTimestamp) > -1) {
+  if (currentTimestamp >= (Math.floor(Date.now()) - 7 * (24 * 60 * 60 * 1000)) && currentTimestamp <= Math.floor(Date.now())) {
     return true;
   }
 

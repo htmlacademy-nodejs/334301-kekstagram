@@ -58,9 +58,9 @@ const generateRandomComments = () => {
 };
 
 const generateRandomTimeStamp = () => {
-  const daysOffset = getRandomInt(0, 6);
+  const offset = getRandomInt(0, (7 * 24 * 60 * 60 * 1000));
 
-  const newTimestamp = Math.floor(Date.now()) - daysOffset * (24 * 60 * 60 * 1000);
+  const newTimestamp = Math.floor(Date.now()) - offset;
 
   return newTimestamp;
 };
