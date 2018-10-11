@@ -1,12 +1,10 @@
 'use strict';
 
-let colors = require(`colors/safe`);
 const http = require(`http`);
 const url = require(`url`);
 const fs = require(`fs`);
 const pathFinder = require(`path`);
 const {promisify} = require(`util`);
-const readline = require(`readline`);
 
 const HOSTNAME = `127.0.0.1`;
 const DEFAULT_PORT = 3000;
@@ -15,12 +13,6 @@ const MIMIMUM_PORT_VALUE = 2000;
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
 const readfile = promisify(fs.readFile);
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  prompt: `Write here> `
-});
 
 const showDirectory = (localPath, files) => {
   return (`
@@ -72,37 +64,15 @@ const readDir = async (absolutePath, localPath, res) => {
   res.end(showDirectory(localPath, files));
 };
 
-const setPort = () => new Promise((resolve) => {
-  rl.question(`Хотите задать номер порта?\nВведите ${colors.green(`yes`)} или ${colors.red(`no`)}\n`, (answer) => {
-    switch (answer) {
-      case `yes`: {
-        rl.question(`Укажите номер порта с номером больше 2000:\n`, (port) => {
-          if (parseInt(port, 10) && parseInt(port, 10) > MIMIMUM_PORT_VALUE) {
-            console.log(`Принято. Порту задано значение: ${colors.blue(port)}`);
-            rl.close();
-            resolve(parseInt(port, 10));
-          } else {
-            console.error(`${colors.red(`Ошибка!`)} Порту задано стандартное значение: ${colors.blue(DEFAULT_PORT)}`);
-            rl.close();
-            resolve(parseInt(port, 10));
-          }
-        });
-        break;
-      }
-      case `no`: {
-        console.log(`Принято. Порту задано стандартное значение: ${colors.blue(DEFAULT_PORT)}`);
-        rl.close();
-        resolve(DEFAULT_PORT);
-        break;
-      }
-      default: {
-        console.error(`Неизвестная команда: ${answer}\nПорту задано стандартное значение: ${colors.blue(DEFAULT_PORT)}`);
-        rl.close();
-        resolve(DEFAULT_PORT);
-      }
-    }
-  });
-});
+const setPort = () => {
+  const possiblePort = process.argv[3];
+  if (possiblePort && parseInt(possiblePort, 10) && parseInt(possiblePort, 10) >= MIMIMUM_PORT_VALUE) {
+    return possiblePort;
+  }
+
+  console.error(`Номер порта не может быть меньше ${MIMIMUM_PORT_VALUE}. Присвоено стандартное значение ${DEFAULT_PORT}`);
+  return DEFAULT_PORT;
+};
 
 const startServer = async () => {
   const server = http.createServer((req, res) => {
@@ -136,7 +106,7 @@ const startServer = async () => {
     });
   });
 
-  const port = await setPort();
+  const port = setPort();
 
   server.listen(port, HOSTNAME, (error) => {
     if (error) {
