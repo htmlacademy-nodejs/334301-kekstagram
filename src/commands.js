@@ -7,6 +7,7 @@ const help = require(`./help`);
 const license = require(`./license`);
 const version = require(`./version`);
 const interrogation = require(`./interrogation`);
+const server = require(`../server`);
 
 const ESCAPE_CODE_FAILURE = 1;
 
@@ -15,7 +16,8 @@ const command = {
   description,
   help,
   license,
-  version
+  version,
+  server
 };
 
 const allCommands = [];

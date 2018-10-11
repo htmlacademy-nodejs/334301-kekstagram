@@ -83,25 +83,6 @@ const saveEntities = (newData) => {
       }
     });
   });
-
-  // rl.question(`Укажите путь до файла для сохранения данных\n`, (newPath) => {
-  //   path = newPath;
-  //
-  //   fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
-  //     if (err) {
-  //       if (err.code === `ENOENT`) {
-  //         rl.close();
-  //         saveFile(path, formedData);
-  //       } else {
-  //         console.error(colors.red(`Файл уже существует и не доступен только для чтения`));
-  //         process.exit(1);
-  //       }
-  //     } else {
-  //       rl.close();
-  //       updateFile(path, formedData);
-  //     }
-  //   });
-  // });
 };
 
 const formEntities = (newEntities) => new Promise((resolve) => {
