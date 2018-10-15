@@ -3,8 +3,14 @@
 let colors = require(`colors/safe`);
 const readline = require(`readline`);
 const fs = require(`fs`);
+const path = require(`path`);
 const dataGenerator = require(`./data-generator`);
+const mkdirp = require(`mkdirp`);
 
+const DEFAULT_FILE = `posts.json`;
+const DEFAULT_PATH = `${process.cwd()}/api`;
+
+const fileWriteOptions = {encoding: `utf-8`, mode: 0o644};
 const entities = [];
 
 const createInterface = () => {
@@ -18,11 +24,29 @@ const createInterface = () => {
 };
 
 const saveFile = (filePath, data) => {
-  fs.writeFile(filePath, data, (writeErr) => {
+  if (path.extname(filePath) && path.dirname(filePath) !== process.cwd()) {
+    mkdirp(path.dirname(filePath), (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  }
+
+  if (!path.extname(filePath)) {
+    mkdirp(filePath, (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+
+    filePath = filePath + `/` + DEFAULT_FILE;
+  }
+
+  fs.writeFile(filePath, JSON.stringify(data), fileWriteOptions, (writeErr) => {
     if (writeErr) {
       throw writeErr;
     }
-    console.log(colors.green(`Файл был сохранен`));
+    console.log(colors.green(`Данные были сохранены в файл: ${filePath}`));
     process.exit();
   });
 };
@@ -59,27 +83,31 @@ const saveEntities = (newData) => {
   const rl = createInterface();
   const formedData = JSON.stringify(newData);
 
-  let path;
+  let dataPath;
 
   console.log(`Укажите путь до файла для сохранения данных`);
 
   rl.prompt();
 
   rl.on(`line`, (newPath) => {
-    path = newPath;
+    if (!newPath) {
+      dataPath = DEFAULT_PATH + `/` + DEFAULT_FILE;
+    } else {
+      dataPath = newPath;
+    }
 
-    fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+    fs.access(dataPath, fs.constants.F_OK | fs.constants.W_OK, (err) => {
       if (err) {
         if (err.code === `ENOENT`) {
           rl.close();
-          saveFile(path, formedData);
+          saveFile(dataPath, formedData);
         } else {
           console.error(colors.red(`Файл уже существует и не доступен только для чтения`));
           console.log(colors.red(`Выберите другой файл`));
         }
       } else {
         rl.close();
-        updateFile(path, formedData);
+        updateFile(dataPath, formedData);
       }
     });
   });

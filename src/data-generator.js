@@ -78,8 +78,22 @@ const generateEntity = () => {
   });
 };
 
+const generateSpecificEntity = () => {
+  return ({
+    "url": `https://picsum.photos/600/?random`,
+    "scale": getRandomInt(0, 100),
+    "effect": effects[getRandomInt(0, (effects.length - 1))],
+    "hashtags": generateRandomHashtags(),
+    "description": generateRandomText(MAXIMUM_TEXT_LENGTH),
+    "likes": getRandomInt(0, MAXIMUM_LIKES_NUMBER),
+    "comments": generateRandomComments(),
+    "date": 1539598594
+  });
+};
+
 module.exports = {
   generateEntity,
+  generateSpecificEntity,
   effects,
   MAXIMUM_TEXT_LENGTH,
   MAXIMUM_HASHTAG_LENGTH,
