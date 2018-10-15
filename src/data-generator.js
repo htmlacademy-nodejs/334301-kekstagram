@@ -7,6 +7,7 @@ const MAXIMUM_LIKES_NUMBER = 1000;
 const MAXIMUM_COMMENT_LENGTH = 140;
 const COMMENTS_NUMBER = 5;
 const PICTURE_SIZE = 600;
+const SPECIFIC_DATE = 1539598594;
 
 const effects = [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`];
 
@@ -79,17 +80,12 @@ const generateEntity = () => {
 };
 
 const generateSpecificEntity = () => {
-  return ({
-    "url": `https://picsum.photos/600/?random`,
-    "scale": getRandomInt(0, 100),
-    "effect": effects[getRandomInt(0, (effects.length - 1))],
-    "hashtags": generateRandomHashtags(),
-    "description": generateRandomText(MAXIMUM_TEXT_LENGTH),
-    "likes": getRandomInt(0, MAXIMUM_LIKES_NUMBER),
-    "comments": generateRandomComments(),
-    "date": 1539598594
-  });
+  const specificEntity = generateEntity();
+  specificEntity.date = SPECIFIC_DATE;
+
+  return specificEntity;
 };
+
 
 module.exports = {
   generateEntity,

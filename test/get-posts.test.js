@@ -13,8 +13,8 @@ describe(`GET /api/posts`, () => {
       expect(200).
       expect(`Content-Type`, /json/);
 
-    const posts = response.body;
-    assert.equal(posts.length, 10);
+    const postsNumber = response.body.total;
+    assert.equal(postsNumber, 10);
   });
 
   it(`trying to reach unknown resource`, async () => {
@@ -35,7 +35,7 @@ describe(`GET /api/posts/:date`, () => {
       expect(200).
       expect(`Content-Type`, /json/);
 
-    const posts = response.body;
+    const posts = response.body.data;
     let isCorrect = true;
 
     posts.forEach((post) => {
