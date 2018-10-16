@@ -1,10 +1,11 @@
 'use strict';
 
 const express = require(`express`);
+const multer = require(`multer`);
+const validate = require(`./validate`);
 const dataGenerator = require(`../data-generator`);
 const IllegalArgumentError = require(`../error/illegal-argument-error`);
 const NotFoundError = require(`../error/not-found-error`);
-const multer = require(`multer`);
 
 const DEFAULT_SKIP = 0;
 const DEFAULT_LIMIT = 50;
@@ -96,7 +97,7 @@ postsRouter.post(``, jsonParser, upload.single(`image`), (req, res) => {
     body.image = {title: image.originalname};
   }
 
-  res.send(body);
+  res.send(validate(body));
 });
 
 module.exports = postsRouter;
