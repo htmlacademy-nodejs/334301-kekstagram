@@ -40,7 +40,7 @@ describe(`POST /api/posts`, () => {
       "date": 1519136255107
     };
 
-    const response = await request(app).
+    await request(app).
     post(`/api/posts`).
     send(sent).
     set(`Accept`, `application/json`).
@@ -135,7 +135,7 @@ describe(`POST /api/posts`, () => {
     const postLikes = 300;
     const postScale = 100;
 
-    const response = await request(app).
+    await request(app).
     post(`/api/posts`).
     field(`url`, postUrl).
     field(`description`, postDescription).
