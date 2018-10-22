@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 let colors = require(`colors/safe`);
 const packageInfo = require(`../package.json`);

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const MAXIMUM_TEXT_LENGTH = 140;
 const MAXIMUM_HASHTAG_LENGTH = 20;
@@ -24,7 +24,9 @@ const generateRandomText = (maximumTextLength) => {
   const textLength = getRandomInt(1, maximumTextLength);
 
   for (let i = 0; i < textLength; i++) {
-    text += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+    text += possibleChars.charAt(
+        Math.floor(Math.random() * possibleChars.length)
+    );
   }
 
   return text;
@@ -59,7 +61,7 @@ const generateRandomComments = () => {
 };
 
 const generateRandomTimeStamp = () => {
-  const offset = getRandomInt(0, (7 * 24 * 60 * 60 * 1000));
+  const offset = getRandomInt(0, 7 * 24 * 60 * 60 * 1000);
 
   const newTimestamp = Math.floor(Date.now()) - offset;
 
@@ -67,16 +69,16 @@ const generateRandomTimeStamp = () => {
 };
 
 const generateEntity = () => {
-  return ({
-    "url": `https://picsum.photos/600/?random`,
-    "scale": getRandomInt(0, 100),
-    "effect": effects[getRandomInt(0, (effects.length - 1))],
-    "hashtags": generateRandomHashtags(),
-    "description": generateRandomText(MAXIMUM_TEXT_LENGTH),
-    "likes": getRandomInt(0, MAXIMUM_LIKES_NUMBER),
-    "comments": generateRandomComments(),
-    "date": generateRandomTimeStamp()
-  });
+  return {
+    url: `https://picsum.photos/600/?random`,
+    scale: getRandomInt(0, 100),
+    effect: effects[getRandomInt(0, effects.length - 1)],
+    hashtags: generateRandomHashtags(),
+    description: generateRandomText(MAXIMUM_TEXT_LENGTH),
+    likes: getRandomInt(0, MAXIMUM_LIKES_NUMBER),
+    comments: generateRandomComments(),
+    date: generateRandomTimeStamp()
+  };
 };
 
 const generateSpecificEntity = () => {
@@ -85,7 +87,6 @@ const generateSpecificEntity = () => {
 
   return specificEntity;
 };
-
 
 module.exports = {
   generateEntity,

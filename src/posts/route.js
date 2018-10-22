@@ -1,103 +1,131 @@
-'use strict';
+"use strict";
 
 const express = require(`express`);
 const multer = require(`multer`);
+const toStream = require(`buffer-to-stream`);
 const validate = require(`./validate`);
-const dataGenerator = require(`../data-generator`);
 const IllegalArgumentError = require(`../error/illegal-argument-error`);
 const NotFoundError = require(`../error/not-found-error`);
 
 const DEFAULT_SKIP = 0;
 const DEFAULT_LIMIT = 50;
-const TEST_POSTS_NUMBER = 10;
 
 // eslint-disable-next-line new-cap
 const postsRouter = express.Router();
 const upload = multer({storage: multer.memoryStorage()});
 const jsonParser = express.json();
 
-class Response {
-  constructor(recievedPosts, skip, limit) {
-    this.recievedPosts = recievedPosts;
-    this.skip = skip;
-    this.limit = limit;
-    this.total = recievedPosts.length;
+const asyncMiddleware = (fn) => (req, res, next) =>
+  fn(req, res, next).catch(next);
 
-    this.formAnswer = this.formAnswer.bind(this);
-  }
+const toPage = async (cursor, skip = 0, limit = DEFAULT_LIMIT) => {
+  const packet = await cursor
+    .skip(skip)
+    .limit(limit)
+    .toArray();
 
-  formAnswer() {
-    return {
-      data: this.recievedPosts,
-      skip: this.skip,
-      limit: this.limit,
-      total: this.total
-    };
-  }
-}
+  return {
+    data: packet,
+    skip,
+    limit,
+    total: await cursor.count()
+  };
+};
 
-const posts = [];
-for (let i = 0; i < TEST_POSTS_NUMBER - 1; i++) {
-  posts.push(dataGenerator.generateEntity());
-}
+postsRouter.get(
+    ``,
+    asyncMiddleware(async (req, res) => {
+      const skip = parseInt(req.query.skip, 10);
+      const limit = parseInt(req.query.limit, 10);
+      if ((skip && skip < DEFAULT_SKIP) || (limit && limit > DEFAULT_LIMIT)) {
+        throw new IllegalArgumentError(
+            `Неверное значение параметра "skip" или "limit"`
+        );
+      }
 
-posts.push(dataGenerator.generateSpecificEntity());
+      res.send(
+          await toPage(await postsRouter.postsStore.getAllPosts(), skip, limit)
+      );
+    })
+);
 
-postsRouter.get(``, (req, res) => {
-  if (posts.length > DEFAULT_LIMIT) {
-    posts.splice(DEFAULT_LIMIT);
-  }
+postsRouter.get(
+    `/:date`,
+    asyncMiddleware(async (req, res) => {
+      const postDate = req.params.date;
+      if (!postDate) {
+        throw new IllegalArgumentError(`В запросе не указана временная метка`);
+      }
 
-  const response = new Response(posts, DEFAULT_SKIP, DEFAULT_LIMIT);
-  res.send(response.formAnswer());
-});
+      const found = await postsRouter.postsStore.getPost(postDate);
+      if (!found) {
+        throw new NotFoundError(
+            `Пост с временной меткой "${postDate}" не найден`
+        );
+      }
 
-postsRouter.get(`/:date`, (req, res) => {
-  const queryParams = req.query;
-  const searchableDate = req.params.date;
-  let postsSkip = DEFAULT_SKIP;
-  let postsLimit = DEFAULT_LIMIT;
+      res.send(found);
+    })
+);
 
-  if (!parseInt(searchableDate, 10)) {
-    throw new IllegalArgumentError(`Не верный формат даты`);
-  }
+postsRouter.post(
+    ``,
+    jsonParser,
+    upload.single(`image`),
+    asyncMiddleware(async (req, res) => {
+      const body = req.body;
+      const image = req.file;
+      if (image) {
+        body.image = {filename: image.originalname};
+      }
 
-  const specificPosts = posts.filter((post) => post.date === parseInt(searchableDate, 10));
+      const result = await postsRouter.postsStore.save(validate(body));
+      const insertedId = result.insertedId;
 
-  if (!specificPosts || specificPosts.length === 0) {
-    throw new NotFoundError(`Посты с датой ${searchableDate} не найдены`);
-  }
+      if (image) {
+        await postsRouter.imagesStore.save(insertedId, toStream(image.buffer));
+      }
 
-  if (queryParams.skip && parseInt(queryParams.skip, 10) && queryParams.skip > 0) {
-    postsSkip = queryParams.skip;
-  }
+      res.send(validate(body));
+    })
+);
 
-  if (queryParams.limit && parseInt(queryParams.limit, 10) && queryParams.limit > 0) {
-    postsLimit = queryParams.limit;
-  }
+postsRouter.get(
+    `/:date/image`,
+    asyncMiddleware(async (req, res) => {
+      const postDate = req.params.date;
+      if (!postDate) {
+        throw new IllegalArgumentError(`В запросе не указана временная метка`);
+      }
 
-  if (specificPosts.length > postsLimit) {
-    specificPosts.splice(postsLimit);
-  }
+      const found = await postsRouter.postsStore.getPost(postDate);
+      if (!found) {
+        throw new NotFoundError(
+            `Пост с временной меткой "${postDate}" не найден`
+        );
+      }
 
-  if (postsSkip && specificPosts.length > postsSkip) {
-    specificPosts.slice(postsSkip);
-  }
+      const result = await postsRouter.imagesStore.get(found._id);
+      if (!result) {
+        throw new NotFoundError(
+            `Изображение для поста с временной меткой "${postDate}" не найдено`
+        );
+      }
 
-  const response = new Response(specificPosts, postsSkip, postsLimit);
+      res.header(`Content-Type`, `image/jpg`);
+      res.header(`Content-Length`, result.info.length);
 
-  res.send(response.formAnswer());
-});
+      res.on(`error`, (e) => console.error(e));
+      res.on(`end`, () => res.end());
+      const stream = result.stream;
+      stream.on(`error`, (e) => console.error(e));
+      stream.on(`end`, () => res.end());
+      stream.pipe(res);
+    })
+);
 
-postsRouter.post(``, jsonParser, upload.single(`image`), (req, res) => {
-  const image = req.file;
-  const body = req.body;
-
-  if (image) {
-    body.image = {title: image.originalname};
-  }
-
-  res.send(validate(body));
-});
-
-module.exports = postsRouter;
+module.exports = (postsStore, imagesStore) => {
+  postsRouter.postsStore = postsStore;
+  postsRouter.imagesStore = imagesStore;
+  return postsRouter;
+};

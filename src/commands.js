@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 let colors = require(`colors/safe`);
 const author = require(`./author`);
@@ -25,17 +25,20 @@ let userCommand;
 let executableFunction;
 
 for (const singleCommand of Object.values(command)) {
-  allCommands.push(
-      {
-        name: singleCommand.name,
-        description: singleCommand.description
-      }
-  );
+  allCommands.push({
+    name: singleCommand.name,
+    description: singleCommand.description
+  });
 }
 
 command.help.availableCommands = allCommands.slice();
 
-if (process.argv[2] && process.argv[2].length > 2 && process.argv[2][0] === `-` && process.argv[2][1] === `-`) {
+if (
+  process.argv[2] &&
+  process.argv[2].length > 2 &&
+  process.argv[2][0] === `-` &&
+  process.argv[2][1] === `-`
+) {
   userCommand = process.argv[2].slice(2);
 } else {
   userCommand = process.argv[2];
@@ -43,19 +46,29 @@ if (process.argv[2] && process.argv[2].length > 2 && process.argv[2][0] === `-` 
 
 if (!userCommand) {
   executableFunction = () => {
-    console.log(colors.magenta(`Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`));
+    console.log(
+        colors.magenta(
+            `Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`
+        )
+    );
 
     interrogation.startInterrogationWithUser();
   };
-} else if (allCommands.find((item) => {
-  return item.name === userCommand;
-})) {
+} else if (
+  allCommands.find((item) => {
+    return item.name === userCommand;
+  })
+) {
   executableFunction = () => {
     command[userCommand].execute();
   };
 } else {
   executableFunction = () => {
-    console.error(colors.red(`Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`));
+    console.error(
+        colors.red(
+            `Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`
+        )
+    );
     process.exit(ESCAPE_CODE_FAILURE);
   };
 }

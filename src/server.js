@@ -1,10 +1,13 @@
-'use strict';
+"use strict";
 
 const express = require(`express`);
-const postsRouter = require(`./posts/route`);
+const postsStore = require(`./posts/store`);
+const imagesStore = require(`./images/store`);
+const postsRouter = require(`./posts/route`)(postsStore, imagesStore);
 
 const DEFAULT_PORT = 3000;
 const MIMIMUM_PORT_VALUE = 2000;
+
 const NOT_FOUND_HANDLER = (req, res) => {
   res.status(404).send(`Page was not found`);
 };
@@ -26,9 +29,16 @@ app.use(NOT_FOUND_HANDLER);
 app.use(ERROR_HANDLER);
 
 const startServer = async () => {
-  const port = (process.argv[3] && parseInt(process.argv[3], 10) && parseInt(process.argv[3], 10) >= MIMIMUM_PORT_VALUE) ? parseInt(process.argv[3], 10) : DEFAULT_PORT;
+  const port =
+    process.argv[3] &&
+    parseInt(process.argv[3], 10) &&
+    parseInt(process.argv[3], 10) >= MIMIMUM_PORT_VALUE
+      ? parseInt(process.argv[3], 10)
+      : DEFAULT_PORT;
 
-  app.listen(port, () => console.log(`Сервер запущен: http://localhost:${port}`));
+  app.listen(port, () =>
+    console.log(`Сервер запущен: http://localhost:${port}`)
+  );
 };
 
 module.exports = {
