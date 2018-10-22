@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 let colors = require(`colors/safe`);
 const readline = require(`readline`);
@@ -54,7 +54,11 @@ const saveFile = (filePath, data) => {
 const updateFile = (filePath, data) => {
   const rl = createInterface();
 
-  console.log(`По указаному пути уже существует аналогичный файл, хотите перезаписать его?\nВведите ${colors.green(`yes`)} для обновления файла или ${colors.red(`no`)} для отмены операции`);
+  console.log(
+      `По указаному пути уже существует аналогичный файл, хотите перезаписать его?\nВведите ${colors.green(
+          `yes`
+      )} для обновления файла или ${colors.red(`no`)} для отмены операции`
+  );
 
   rl.prompt();
 
@@ -64,8 +68,7 @@ const updateFile = (filePath, data) => {
         rl.close();
         saveFile(filePath, data);
         break;
-      case `no`:
-      {
+      case `no`: {
         console.log(colors.red(`Выберите другой файл`));
         rl.close();
         saveEntities(data);
@@ -102,7 +105,9 @@ const saveEntities = (newData) => {
           rl.close();
           saveFile(dataPath, formedData);
         } else {
-          console.error(colors.red(`Файл уже существует и не доступен только для чтения`));
+          console.error(
+              colors.red(`Файл уже существует и не доступен только для чтения`)
+          );
           console.log(colors.red(`Выберите другой файл`));
         }
       } else {
@@ -113,67 +118,71 @@ const saveEntities = (newData) => {
   });
 };
 
-const formEntities = (newEntities) => new Promise((resolve) => {
-  const rl = createInterface();
-  const data = newEntities;
+const formEntities = (newEntities) =>
+  new Promise((resolve) => {
+    const rl = createInterface();
+    const data = newEntities;
 
-  console.log(`Укажите желаемое колличество сущностей`);
+    console.log(`Укажите желаемое колличество сущностей`);
 
-  rl.prompt();
-
-  rl.on(`line`, (number) => {
-    if (parseInt(number, 10) && parseInt(number, 10) > 0) {
-      for (let i = 0; i < parseInt(number, 10); i++) {
-        data.push(dataGenerator.generateEntity());
-      }
-      rl.close();
-      console.log(`Создано ${colors.blue(number)} сущностей`);
-      resolve(data);
-    } else {
-      console.log(colors.red(`Повторите ввод`));
-      rl.prompt();
-    }
-  });
-});
-
-const startProcess = (inputArray) => new Promise((resolve) => {
-  const rl = createInterface();
-
-  console.log(`Хотите сгенерировать данные?\nВведи ${colors.green(`yes`)} для генерации или ${colors.red(`no`)} для завершения программы`);
-
-  rl.prompt();
-
-  rl.on(`line`, (command) => {
-    switch (command.trim().toLowerCase()) {
-      case `yes`:
-      {
-        rl.close();
-        resolve(inputArray);
-        break;
-      }
-      case `no`:
-      {
-        rl.close();
-        console.log(colors.green(`Программа завершена!`));
-        process.exit();
-        break;
-      }
-      default:
-        console.log(colors.red(`Повторите ввод`));
-        break;
-    }
     rl.prompt();
+
+    rl.on(`line`, (number) => {
+      if (parseInt(number, 10) && parseInt(number, 10) > 0) {
+        for (let i = 0; i < parseInt(number, 10); i++) {
+          data.push(dataGenerator.generateEntity());
+        }
+        rl.close();
+        console.log(`Создано ${colors.blue(number)} сущностей`);
+        resolve(data);
+      } else {
+        console.log(colors.red(`Повторите ввод`));
+        rl.prompt();
+      }
+    });
   });
-});
+
+const startProcess = (inputArray) =>
+  new Promise((resolve) => {
+    const rl = createInterface();
+
+    console.log(
+        `Хотите сгенерировать данные?\nВведи ${colors.green(
+            `yes`
+        )} для генерации или ${colors.red(`no`)} для завершения программы`
+    );
+
+    rl.prompt();
+
+    rl.on(`line`, (command) => {
+      switch (command.trim().toLowerCase()) {
+        case `yes`: {
+          rl.close();
+          resolve(inputArray);
+          break;
+        }
+        case `no`: {
+          rl.close();
+          console.log(colors.green(`Программа завершена!`));
+          process.exit();
+          break;
+        }
+        default:
+          console.log(colors.red(`Повторите ввод`));
+          break;
+      }
+      rl.prompt();
+    });
+  });
 
 const startInterrogationWithUser = () => {
   Promise.resolve(entities)
-  .then(startProcess)
-  .then(formEntities)
-  .then(saveEntities)
-  .catch((error) => {
-    console.error(error);
-  });
+    .then(startProcess)
+    .then(formEntities)
+    .then(saveEntities)
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 module.exports = {
