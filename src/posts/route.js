@@ -75,8 +75,9 @@ postsRouter.post(
     asyncMiddleware(async (req, res) => {
       const body = req.body;
       const image = req.file;
+
       if (image) {
-        body.image = {filename: image.originalname};
+        body.filename = image.mimetype;
       }
 
       const result = await postsRouter.postsStore.save(validate(body));

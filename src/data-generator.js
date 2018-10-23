@@ -73,11 +73,12 @@ const generateEntity = () => {
     url: `https://picsum.photos/600/?random`,
     scale: getRandomInt(0, 100),
     effect: effects[getRandomInt(0, effects.length - 1)],
-    hashtags: generateRandomHashtags(),
+    hashtags: generateRandomHashtags().join(` `),
     description: generateRandomText(MAXIMUM_TEXT_LENGTH),
     likes: getRandomInt(0, MAXIMUM_LIKES_NUMBER),
     comments: generateRandomComments(),
-    date: generateRandomTimeStamp()
+    date: generateRandomTimeStamp(),
+    filename: `image/jpeg`
   };
 };
 

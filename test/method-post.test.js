@@ -21,10 +21,11 @@ describe(`POST /api/posts`, () => {
       url: `https://picsum.photos/600/?random`,
       description: `Самая красивая тачка на этой планете`,
       effect: `chrome`,
-      hashtags: [`тачка`, `огонь`, `car`, `bmwX5`],
+      hashtags: `#тачка #огонь #car #bmwX5`,
       likes: 300,
       scale: 100,
-      date: 1519136255107
+      date: 1519136255107,
+      filename: `image/jpeg`
     };
 
     const response = await request(app)
@@ -43,20 +44,22 @@ describe(`POST /api/posts`, () => {
     const postUrl = `https://picsum.photos/600/?random`;
     const postDescription = `Самая красивая тачка на этой планете`;
     const postEffect = `chrome`;
-    const postHashtags = [`тачка`, `огонь`, `car`, `bmwX5`];
+    const postHashtags = `#тачка #огонь #car #bmwX5`;
     const postLikes = 300;
     const postScale = 100;
     const postDate = 1519136255107;
+    const fileName = `image/jpeg`;
 
     const response = await request(app)
       .post(`/api/posts`)
       .field(`url`, postUrl)
       .field(`description`, postDescription)
-      .field(`effects`, postEffect)
+      .field(`effect`, postEffect)
       .field(`hashtags`, postHashtags)
       .field(`likes`, postLikes)
       .field(`scale`, postScale)
       .field(`date`, postDate)
+      .field(`filename`, fileName)
       .set(`Accept`, `application/json`)
       .set(`Content-Type`, `multipart/form-data`)
       .expect(200)
@@ -66,11 +69,12 @@ describe(`POST /api/posts`, () => {
     assert.deepEqual(newPost, {
       url: postUrl,
       description: postDescription,
-      effects: postEffect,
+      effect: postEffect,
       hashtags: postHashtags,
       likes: postLikes,
       scale: postScale,
-      date: postDate
+      date: postDate,
+      filename: fileName
     });
   });
 
@@ -78,7 +82,7 @@ describe(`POST /api/posts`, () => {
     const postUrl = `https://picsum.photos/600/?random`;
     const postDescription = `Самая красивая тачка на этой планете`;
     const postEffect = `chrome`;
-    const postHashtags = [`тачка`, `огонь`, `car`, `bmwX5`];
+    const postHashtags = `#тачка #огонь #car #bmwX5`;
     const postLikes = 300;
     const postScale = 100;
     const postDate = 1519136255107;
@@ -87,7 +91,7 @@ describe(`POST /api/posts`, () => {
       .post(`/api/posts`)
       .field(`url`, postUrl)
       .field(`description`, postDescription)
-      .field(`effects`, postEffect)
+      .field(`effect`, postEffect)
       .field(`hashtags`, postHashtags)
       .field(`likes`, postLikes)
       .field(`scale`, postScale)
@@ -102,14 +106,12 @@ describe(`POST /api/posts`, () => {
     assert.deepEqual(post, {
       url: postUrl,
       description: postDescription,
-      effects: postEffect,
+      effect: postEffect,
       hashtags: postHashtags,
-      likes: `${postLikes}`,
-      scale: `${postScale}`,
-      date: `${postDate}`,
-      image: {
-        filename: `mimic.jpg`
-      }
+      likes: postLikes,
+      scale: postScale,
+      date: postDate,
+      filename: `image/jpeg`
     });
   });
 });

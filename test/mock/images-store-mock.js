@@ -1,13 +1,9 @@
 "use strict";
 
 class MockImageStore {
-  async get() {
-    console.log(2);
-  }
+  async get() {}
 
-  async save() {
-    console.log(1);
-  }
+  async save() {}
 }
 
 module.exports = new MockImageStore();

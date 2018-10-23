@@ -1,10 +1,12 @@
-'use strict';
+"use strict";
 
 const dataGenerator = require(`../src/data-generator`);
 
 const checkURL = (url) => {
   const urlParts = url.split(`/`);
-  return urlParts.find((element) => element === `${dataGenerator.PICTURE_SIZE}`);
+  return urlParts.find(
+      (element) => element === `${dataGenerator.PICTURE_SIZE}`
+  );
 };
 
 const checkScale = (number) => {
@@ -26,7 +28,7 @@ const checkEffects = (effect) => {
 const checkHashtagsFirstChar = (hashtags) => {
   let result = true;
 
-  hashtags.forEach((hashtag) => {
+  hashtags.split(` `).forEach((hashtag) => {
     if (hashtag[0] !== `#`) {
       result = false;
     }
@@ -38,7 +40,7 @@ const checkHashtagsFirstChar = (hashtags) => {
 const checkHashtagsSpaces = (hashtags) => {
   let result = true;
 
-  hashtags.forEach((hashtag) => {
+  hashtags.split(` `).forEach((hashtag) => {
     if (hashtag.split(` `).length > 1) {
       result = false;
     }
@@ -50,8 +52,8 @@ const checkHashtagsSpaces = (hashtags) => {
 const checkHashtagsLength = (hashtags) => {
   let result = true;
 
-  hashtags.forEach((hashtag) => {
-    if (hashtag.length > (dataGenerator.MAXIMUM_HASHTAG_LENGTH + 1)) {
+  hashtags.split(` `).forEach((hashtag) => {
+    if (hashtag.length > dataGenerator.MAXIMUM_HASHTAG_LENGTH + 1) {
       result = false;
     }
   });
@@ -60,7 +62,9 @@ const checkHashtagsLength = (hashtags) => {
 };
 
 const checkHashtagsCopies = (hashtags) => {
-  const lowerCaseHashtags = hashtags.map((hashtag) => hashtag.toLowerCase());
+  const lowerCaseHashtags = hashtags
+    .split(` `)
+    .map((hashtag) => hashtag.toLowerCase());
 
   const isDuplicate = lowerCaseHashtags.some(function (item, idx) {
     return lowerCaseHashtags.indexOf(item) !== idx;
@@ -82,8 +86,10 @@ const checkCommentLength = (comments) => {
 };
 
 const checkTimestamp = (currentTimestamp) => {
-
-  if (currentTimestamp >= (Math.floor(Date.now()) - 7 * (24 * 60 * 60 * 1000)) && currentTimestamp <= Math.floor(Date.now())) {
+  if (
+    currentTimestamp >= Math.floor(Date.now()) - 7 * (24 * 60 * 60 * 1000) &&
+    currentTimestamp <= Math.floor(Date.now())
+  ) {
     return true;
   }
 
