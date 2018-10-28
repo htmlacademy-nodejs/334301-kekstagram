@@ -1,15 +1,16 @@
 "use strict";
 
 let colors = require(`colors/safe`);
+const logger = require(`./logger`);
 
 module.exports = {
   name: `help`,
   description: `Список доступных команд`,
   availableCommands: [],
   execute() {
-    console.log(`Доступные команды:`);
+    logger.info(`Доступные команды:`);
     this.availableCommands.forEach((command) => {
-      console.log(
+      logger.info(
           `--${colors.red(command.name)}: ${colors.green(command.description)}`
       );
     });

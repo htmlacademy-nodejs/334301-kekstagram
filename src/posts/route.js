@@ -6,6 +6,7 @@ const toStream = require(`buffer-to-stream`);
 const validate = require(`./validate`);
 const IllegalArgumentError = require(`../error/illegal-argument-error`);
 const NotFoundError = require(`../error/not-found-error`);
+const logger = require(`../logger`);
 
 const DEFAULT_SKIP = 0;
 const DEFAULT_LIMIT = 50;
@@ -31,6 +32,15 @@ const toPage = async (cursor, skip = 0, limit = DEFAULT_LIMIT) => {
     total: await cursor.count()
   };
 };
+
+postsRouter.use((req, res, next) => {
+  res.header(`Access-Control-Allow-Origin`, `*`);
+  res.header(
+      `Access-Control-Allow-Headers`,
+      `Origin, X-Requested-With, Content-Type, Accept`
+  );
+  next();
+});
 
 postsRouter.get(
     ``,
@@ -116,10 +126,10 @@ postsRouter.get(
       res.header(`Content-Type`, `image/jpg`);
       res.header(`Content-Length`, result.info.length);
 
-      res.on(`error`, (e) => console.error(e));
+      res.on(`error`, (e) => logger.error(e));
       res.on(`end`, () => res.end());
       const stream = result.stream;
-      stream.on(`error`, (e) => console.error(e));
+      stream.on(`error`, (e) => logger.error(e));
       stream.on(`end`, () => res.end());
       stream.pipe(res);
     })

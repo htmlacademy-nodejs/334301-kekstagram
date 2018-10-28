@@ -6,6 +6,7 @@ const fs = require(`fs`);
 const path = require(`path`);
 const dataGenerator = require(`./data-generator`);
 const mkdirp = require(`mkdirp`);
+const logger = require(`./logger`);
 
 const DEFAULT_FILE = `posts.json`;
 const DEFAULT_PATH = `${process.cwd()}/api`;
@@ -27,7 +28,7 @@ const saveFile = (filePath, data) => {
   if (path.extname(filePath) && path.dirname(filePath) !== process.cwd()) {
     mkdirp(path.dirname(filePath), (err) => {
       if (err) {
-        console.error(err);
+        logger.error(err);
       }
     });
   }
@@ -35,7 +36,7 @@ const saveFile = (filePath, data) => {
   if (!path.extname(filePath)) {
     mkdirp(filePath, (err) => {
       if (err) {
-        console.error(err);
+        logger.error(err);
       }
     });
 
@@ -46,7 +47,7 @@ const saveFile = (filePath, data) => {
     if (writeErr) {
       throw writeErr;
     }
-    console.log(colors.green(`Данные были сохранены в файл: ${filePath}`));
+    logger.info(colors.green(`Данные были сохранены в файл: ${filePath}`));
     process.exit();
   });
 };
@@ -105,7 +106,7 @@ const saveEntities = (newData) => {
           rl.close();
           saveFile(dataPath, formedData);
         } else {
-          console.error(
+          logger.error(
               colors.red(`Файл уже существует и не доступен только для чтения`)
           );
           console.log(colors.red(`Выберите другой файл`));
@@ -133,7 +134,7 @@ const formEntities = (newEntities) =>
           data.push(dataGenerator.generateEntity());
         }
         rl.close();
-        console.log(`Создано ${colors.blue(number)} сущностей`);
+        logger.info(`Создано ${colors.blue(number)} сущностей`);
         resolve(data);
       } else {
         console.log(colors.red(`Повторите ввод`));
@@ -163,7 +164,7 @@ const startProcess = (inputArray) =>
         }
         case `no`: {
           rl.close();
-          console.log(colors.green(`Программа завершена!`));
+          logger.info(colors.green(`Программа завершена!`));
           process.exit();
           break;
         }
@@ -181,7 +182,7 @@ const startInterrogationWithUser = () => {
     .then(formEntities)
     .then(saveEntities)
     .catch((error) => {
-      console.error(error);
+      logger.error(error);
     });
 };
 

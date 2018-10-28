@@ -4,8 +4,8 @@ const express = require(`express`);
 const postsStore = require(`./posts/store`);
 const imagesStore = require(`./images/store`);
 const postsRouter = require(`./posts/route`)(postsStore, imagesStore);
+const logger = require(`./logger`);
 
-const DEFAULT_PORT = 3000;
 const MIMIMUM_PORT_VALUE = 2000;
 
 const NOT_FOUND_HANDLER = (req, res) => {
@@ -13,10 +13,12 @@ const NOT_FOUND_HANDLER = (req, res) => {
 };
 const ERROR_HANDLER = (err, req, res, _next) => {
   if (err) {
-    console.error(err);
+    logger.error(err);
     res.status(err.code || 500).send(err.message);
   }
 };
+
+const {SERVER_PORT = 3000, SERVER_HOST = `localhost`} = process.env;
 
 const app = express();
 
@@ -34,10 +36,10 @@ const startServer = async () => {
     parseInt(process.argv[3], 10) &&
     parseInt(process.argv[3], 10) >= MIMIMUM_PORT_VALUE
       ? parseInt(process.argv[3], 10)
-      : DEFAULT_PORT;
+      : SERVER_PORT;
 
-  app.listen(port, () =>
-    console.log(`Сервер запущен: http://localhost:${port}`)
+  app.listen(port, SERVER_HOST, () =>
+    logger.info(`Сервер запущен: http://${SERVER_HOST}:${port}`)
   );
 };
 

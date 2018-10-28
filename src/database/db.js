@@ -1,14 +1,15 @@
 "use strict";
 
 const {MongoClient} = require(`mongodb`);
+const logger = require(`../logger`);
 
-const url = `mongodb://localhost:27017`;
+const {DB_HOST = `localhost:27017`, DB_PATH = `kekstagram`} = process.env;
 
-const dbName = `kekstagram`;
+const url = `mongodb://${DB_HOST}`;
 
 module.exports = MongoClient.connect(url)
-  .then((client) => client.db(dbName))
+  .then((client) => client.db(DB_PATH))
   .catch((e) => {
-    console.error(`Failed to connect to MongoDB`, e);
+    logger.error(`Failed to connect to MongoDB`, e);
     process.exit(1);
   });
