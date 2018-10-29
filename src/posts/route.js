@@ -12,7 +12,7 @@ const DEFAULT_SKIP = 0;
 const DEFAULT_LIMIT = 50;
 
 // eslint-disable-next-line new-cap
-const postsRouter = express.Router();
+const postsRouter = new express.Router();
 const upload = multer({storage: multer.memoryStorage()});
 const jsonParser = express.json();
 
