@@ -47,7 +47,7 @@ const saveFile = (filePath, data) => {
     if (writeErr) {
       throw writeErr;
     }
-    logger.info(colors.green(`Данные были сохранены в файл: ${filePath}`));
+    console.log(colors.green(`Данные были сохранены в файл: ${filePath}`));
     process.exit();
   });
 };
@@ -106,7 +106,7 @@ const saveEntities = (newData) => {
           rl.close();
           saveFile(dataPath, formedData);
         } else {
-          logger.error(
+          console.error(
               colors.red(`Файл уже существует и не доступен только для чтения`)
           );
           console.log(colors.red(`Выберите другой файл`));
@@ -134,7 +134,7 @@ const formEntities = (newEntities) =>
           data.push(dataGenerator.generateEntity());
         }
         rl.close();
-        logger.info(`Создано ${colors.blue(number)} сущностей`);
+        console.log(`Создано ${colors.blue(number)} сущностей`);
         resolve(data);
       } else {
         console.log(colors.red(`Повторите ввод`));
@@ -164,7 +164,7 @@ const startProcess = (inputArray) =>
         }
         case `no`: {
           rl.close();
-          logger.info(colors.green(`Программа завершена!`));
+          console.log(colors.green(`Программа завершена!`));
           process.exit();
           break;
         }

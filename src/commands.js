@@ -8,7 +8,6 @@ const license = require(`./license`);
 const version = require(`./version`);
 const interrogation = require(`./interrogation`);
 const server = require(`./server`);
-const logger = require(`./logger`);
 
 const ESCAPE_CODE_FAILURE = 1;
 
@@ -47,7 +46,7 @@ if (
 
 if (!userCommand) {
   executableFunction = () => {
-    logger.info(
+    console.log(
         colors.magenta(
             `Привет пользователь!\nЭта программа будет запускать сервер «Кекстаграм»`
         )
@@ -65,7 +64,7 @@ if (!userCommand) {
   };
 } else {
   executableFunction = () => {
-    logger.error(
+    console.error(
         colors.red(
             `Неизвестная команда: ${userCommand}\nЧтобы прочитать правила использования приложения, наберите --help`
         )

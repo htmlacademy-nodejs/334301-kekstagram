@@ -1,7 +1,6 @@
 "use strict";
 
 let colors = require(`colors/safe`);
-const logger = require(`./logger`);
 const packageInfo = require(`../package.json`);
 
 module.exports = {
@@ -13,6 +12,6 @@ module.exports = {
     const minor = colors.green(version[1]);
     const patch = colors.blue(version[2]);
 
-    logger.info(`Текущая версия программы: v${major}.${minor}.${patch}`);
+    console.log(`Текущая версия программы: v${major}.${minor}.${patch}`);
   }
 };
