@@ -18,14 +18,14 @@ app.use(`/api/posts`, postsRoute);
 describe(`POST /api/posts`, () => {
   it(`send post as json`, async () => {
     const sent = {
-      url: `https://picsum.photos/600/?random`,
+      url: `/api/posts/1519136255107/car.jpg`,
       description: `Самая красивая тачка на этой планете`,
       effect: `chrome`,
       hashtags: `#тачка #огонь #car #bmwX5`,
-      likes: 300,
-      scale: 100,
-      date: 1519136255107,
-      filename: `image/jpeg`
+      likes: `300`,
+      scale: `100`,
+      date: `1519136255107`,
+      filename: `car.jpg`
     };
 
     const response = await request(app)
@@ -41,14 +41,14 @@ describe(`POST /api/posts`, () => {
   });
 
   it(`send post as multipart/form-data`, async () => {
-    const postUrl = `https://picsum.photos/600/?random`;
+    const postUrl = `/api/posts/1519136255107/car.jpg`;
     const postDescription = `Самая красивая тачка на этой планете`;
     const postEffect = `chrome`;
     const postHashtags = `#тачка #огонь #car #bmwX5`;
-    const postLikes = 300;
-    const postScale = 100;
-    const postDate = 1519136255107;
-    const fileName = `image/jpeg`;
+    const postLikes = `300`;
+    const postScale = `100`;
+    const postDate = `1519136255107`;
+    const fileName = `car.jpg`;
 
     const response = await request(app)
       .post(`/api/posts`)
@@ -79,13 +79,13 @@ describe(`POST /api/posts`, () => {
   });
 
   it(`send post with image as multipart/form-data`, async () => {
-    const postUrl = `https://picsum.photos/600/?random`;
+    const postUrl = `/api/posts/1519136255107/mimic.jpg`;
     const postDescription = `Самая красивая тачка на этой планете`;
     const postEffect = `chrome`;
     const postHashtags = `#тачка #огонь #car #bmwX5`;
-    const postLikes = 300;
-    const postScale = 100;
-    const postDate = 1519136255107;
+    const postLikes = `300`;
+    const postScale = `100`;
+    const postDate = `1519136255107`;
 
     const response = await request(app)
       .post(`/api/posts`)
@@ -96,22 +96,23 @@ describe(`POST /api/posts`, () => {
       .field(`likes`, postLikes)
       .field(`scale`, postScale)
       .field(`date`, postDate)
-      .attach(`image`, `test/img/mimic.jpg`)
+      .attach(`filename`, `test/img/mimic.jpg`)
       .set(`Accept`, `application/json`)
       .set(`Content-Type`, `multipart/form-data`)
       .expect(200)
       .expect(`Content-Type`, /json/);
 
-    const post = response.body;
-    assert.deepEqual(post, {
-      url: postUrl,
+    const newPost = response.body;
+    assert.deepEqual(newPost, {
       description: postDescription,
       effect: postEffect,
       hashtags: postHashtags,
       likes: postLikes,
       scale: postScale,
       date: postDate,
-      filename: `image/jpeg`
+      filename: `mimic.jpg`,
+      filetype: `image/jpeg`,
+      url: `/api/posts/${postDate}/mimic.jpg`
     });
   });
 });

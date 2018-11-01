@@ -81,20 +81,27 @@ postsRouter.get(
 postsRouter.post(
     ``,
     jsonParser,
-    upload.single(`image`),
+    upload.single(`filename`),
     asyncMiddleware(async (req, res) => {
       const body = req.body;
       const image = req.file;
 
-      if (image) {
-        body.filename = image.mimetype;
+      if (!body.date) {
+        body.date = Math.floor(Date.now());
       }
 
-      const result = await postsRouter.postsStore.save(validate(body));
-      const insertedId = result.insertedId;
+      if (image) {
+        body.filename = image.originalname;
+        body.filetype = image.mimetype;
+      }
+
+      await postsRouter.postsStore.save(validate(body));
 
       if (image) {
-        await postsRouter.imagesStore.save(insertedId, toStream(image.buffer));
+        await postsRouter.imagesStore.save(
+            image.originalname,
+            toStream(image.buffer)
+        );
       }
 
       res.send(validate(body));
@@ -116,7 +123,7 @@ postsRouter.get(
         );
       }
 
-      const result = await postsRouter.imagesStore.get(found._id);
+      const result = await postsRouter.imagesStore.get(found.filename);
       if (!result) {
         throw new NotFoundError(
             `Изображение для поста с временной меткой "${postDate}" не найдено`
