@@ -24,6 +24,12 @@ const validate = (data) => {
     errors.push(`Field "filename" is required!`);
   }
 
+  if (data.filetype) {
+    if (data.filetype !== `image/jpeg` || data.filetype !== `image/png`) {
+      errors.push(`Wrong type of file`);
+    }
+  }
+
   if (!data.scale) {
     errors.push(`Field name "scale" is required!`);
   } else {

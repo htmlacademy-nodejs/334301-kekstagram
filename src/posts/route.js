@@ -90,6 +90,8 @@ postsRouter.post(
         body.date = Math.floor(Date.now());
       }
 
+      body.url = `/api/posts/${parseInt(body.date)}/image`;
+
       if (image) {
         body.filename = image.originalname;
         body.filetype = image.mimetype;
