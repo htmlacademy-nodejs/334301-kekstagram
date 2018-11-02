@@ -21,7 +21,7 @@ class PostsStore {
   }
 
   async getPost(someDate) {
-    return (await this.collection).findOne({date: parseInt(someDate)});
+    return (await this.collection).findOne({date: parseInt(someDate, 10)});
   }
 
   async getAllPosts() {

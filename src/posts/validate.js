@@ -14,6 +14,7 @@ const POSSIBLE_EFFECTS = [
   `phobos`,
   `heat`
 ];
+const FILE__TYPES = [`image/jpeg`, `image/png`];
 
 const ValidationError = require(`../error/validation-error`);
 
@@ -25,7 +26,7 @@ const validate = (data) => {
   }
 
   if (data.filetype) {
-    if (data.filetype !== `image/jpeg` || data.filetype !== `image/png`) {
+    if (FILE__TYPES.indexOf(data.filetype) === -1) {
       errors.push(`Wrong type of file`);
     }
   }

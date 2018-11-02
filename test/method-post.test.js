@@ -18,7 +18,7 @@ app.use(`/api/posts`, postsRoute);
 describe(`POST /api/posts`, () => {
   it(`send post as json`, async () => {
     const sent = {
-      url: `/api/posts/1519136255107/car.jpg`,
+      url: `/api/posts/1519136255107/image`,
       description: `Самая красивая тачка на этой планете`,
       effect: `chrome`,
       hashtags: `#тачка #огонь #car #bmwX5`,
@@ -41,7 +41,7 @@ describe(`POST /api/posts`, () => {
   });
 
   it(`send post as multipart/form-data`, async () => {
-    const postUrl = `/api/posts/1519136255107/car.jpg`;
+    const postUrl = `/api/posts/1519136255107/image`;
     const postDescription = `Самая красивая тачка на этой планете`;
     const postEffect = `chrome`;
     const postHashtags = `#тачка #огонь #car #bmwX5`;
@@ -79,7 +79,7 @@ describe(`POST /api/posts`, () => {
   });
 
   it(`send post with image as multipart/form-data`, async () => {
-    const postUrl = `/api/posts/1519136255107/mimic.jpg`;
+    const postUrl = `/api/posts/1519136255107/image`;
     const postDescription = `Самая красивая тачка на этой планете`;
     const postEffect = `chrome`;
     const postHashtags = `#тачка #огонь #car #bmwX5`;
@@ -112,7 +112,7 @@ describe(`POST /api/posts`, () => {
       date: postDate,
       filename: `mimic.jpg`,
       filetype: `image/jpeg`,
-      url: `/api/posts/${postDate}/mimic.jpg`
+      url: postUrl
     });
   });
 });
