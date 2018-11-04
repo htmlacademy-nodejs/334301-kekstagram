@@ -1,6 +1,6 @@
 "use strict";
 
-let colors = require(`colors/safe`);
+const colors = require(`colors/safe`);
 const packageInfo = require(`../package.json`);
 
 module.exports = {

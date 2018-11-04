@@ -1,6 +1,6 @@
 "use strict";
 
-let colors = require(`colors/safe`);
+const colors = require(`colors/safe`);
 const author = require(`./author`);
 const description = require(`./description`);
 const help = require(`./help`);
@@ -36,8 +36,7 @@ command.help.availableCommands = allCommands.slice();
 if (
   process.argv[2] &&
   process.argv[2].length > 2 &&
-  process.argv[2][0] === `-` &&
-  process.argv[2][1] === `-`
+  process.argv[2].startsWith(`--`)
 ) {
   userCommand = process.argv[2].slice(2);
 } else {

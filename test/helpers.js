@@ -66,7 +66,7 @@ const checkHashtagsCopies = (hashtags) => {
     .split(` `)
     .map((hashtag) => hashtag.toLowerCase());
 
-  const isDuplicate = lowerCaseHashtags.some(function (item, idx) {
+  const isDuplicate = lowerCaseHashtags.some((item, idx) => {
     return lowerCaseHashtags.indexOf(item) !== idx;
   });
 
