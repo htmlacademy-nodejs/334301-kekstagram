@@ -1,6 +1,6 @@
 "use strict";
 
-let colors = require(`colors/safe`);
+const colors = require(`colors/safe`);
 
 module.exports = {
   name: `help`,

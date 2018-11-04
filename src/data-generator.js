@@ -38,7 +38,7 @@ const generateRandomHashtags = () => {
   const newHashTags = [];
 
   for (let i = 0; i < hashtagsNumber; i++) {
-    let hashtag = `#` + generateRandomText(MAXIMUM_HASHTAG_LENGTH);
+    const hashtag = `#${generateRandomText(MAXIMUM_HASHTAG_LENGTH)}`;
 
     newHashTags.push(hashtag);
   }
@@ -52,7 +52,7 @@ const generateRandomComments = () => {
   const newComments = [];
 
   for (let i = 0; i < commentsNumber; i++) {
-    let comment = generateRandomText(MAXIMUM_COMMENT_LENGTH);
+    const comment = generateRandomText(MAXIMUM_COMMENT_LENGTH);
 
     newComments.push(comment);
   }

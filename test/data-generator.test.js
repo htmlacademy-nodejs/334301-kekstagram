@@ -4,17 +4,17 @@ const assert = require(`assert`);
 const helpers = require(`./helpers`);
 const dataGenerator = require(`../src/data-generator`);
 
-describe(`Data Generator`, function () {
-  it(`should have a generateEntity method`, function () {
+describe(`Data Generator`, () => {
+  it(`should have a generateEntity method`, () => {
     assert.equal(typeof dataGenerator, `object`);
     assert.equal(typeof dataGenerator.generateEntity, `function`);
   });
 
-  it(`generateEntity method should return object`, function () {
+  it(`generateEntity method should return object`, () => {
     assert.equal(typeof dataGenerator.generateEntity(), `object`);
   });
 
-  it(`generateEntity method data should have all fields`, function () {
+  it(`generateEntity method data should have all fields`, () => {
     const newObject = dataGenerator.generateEntity();
 
     assert.equal(typeof newObject.url, `string`);
@@ -28,10 +28,8 @@ describe(`Data Generator`, function () {
     assert.equal(typeof newObject.filename, `string`);
   });
 
-  describe(`URL field`, function () {
-    it(`contains address to ${
-      dataGenerator.PICTURE_SIZE
-    } picture size`, function () {
+  describe(`URL field`, () => {
+    it(`contains address to ${dataGenerator.PICTURE_SIZE} picture size`, () => {
       assert.equal(
           helpers.checkURL(dataGenerator.generateEntity().url),
           dataGenerator.PICTURE_SIZE
@@ -39,8 +37,8 @@ describe(`Data Generator`, function () {
     });
   });
 
-  describe(`Scale field`, function () {
-    it(`contains number from 0 to 100`, function () {
+  describe(`Scale field`, () => {
+    it(`contains number from 0 to 100`, () => {
       assert.equal(
           helpers.checkScale(dataGenerator.generateEntity().scale),
           true
@@ -60,8 +58,8 @@ describe(`Data Generator`, function () {
     });
   });
 
-  describe(`Effect field`, function () {
-    it(`contains one of possible effects`, function () {
+  describe(`Effect field`, () => {
+    it(`contains one of possible effects`, () => {
       assert.equal(
           helpers.checkEffects(dataGenerator.generateEntity().effect),
           true
@@ -81,10 +79,8 @@ describe(`Data Generator`, function () {
     });
   });
 
-  describe(`Hashtag field`, function () {
-    it(`has maximum ${
-      dataGenerator.MAXIMUM_HASHTAGS_NUMBER
-    } elements`, function () {
+  describe(`Hashtag field`, () => {
+    it(`has maximum ${dataGenerator.MAXIMUM_HASHTAGS_NUMBER} elements`, () => {
       assert.equal(
           dataGenerator.generateEntity().hashtags.split(` `).length <=
           dataGenerator.MAXIMUM_HASHTAGS_NUMBER,
@@ -107,7 +103,7 @@ describe(`Data Generator`, function () {
       );
     });
 
-    it(`begins with #`, function () {
+    it(`begins with #`, () => {
       assert.equal(
           helpers.checkHashtagsFirstChar(dataGenerator.generateEntity().hashtags),
           true
@@ -122,7 +118,7 @@ describe(`Data Generator`, function () {
       );
     });
 
-    it(`doesn't contain spaces in single hashtag`, function () {
+    it(`doesn't contain spaces in single hashtag`, () => {
       assert.equal(
           helpers.checkHashtagsSpaces(dataGenerator.generateEntity().hashtags),
           true
@@ -139,7 +135,7 @@ describe(`Data Generator`, function () {
 
     it(`doesn't contain items with more then ${
       dataGenerator.MAXIMUM_HASHTAG_LENGTH
-    } symbols`, function () {
+    } symbols`, () => {
       assert.equal(
           helpers.checkHashtagsLength(dataGenerator.generateEntity().hashtags),
           true
@@ -154,7 +150,7 @@ describe(`Data Generator`, function () {
       );
     });
 
-    it(`has unique items`, function () {
+    it(`has unique items`, () => {
       assert.equal(
           helpers.checkHashtagsCopies(dataGenerator.generateEntity().hashtags),
           true
@@ -174,8 +170,8 @@ describe(`Data Generator`, function () {
     });
   });
 
-  describe(`Description field`, function () {
-    it(`length less then ${dataGenerator.MAXIMUM_TEXT_LENGTH}`, function () {
+  describe(`Description field`, () => {
+    it(`length less then ${dataGenerator.MAXIMUM_TEXT_LENGTH}`, () => {
       assert.equal(
           dataGenerator.generateEntity().description.length <=
           dataGenerator.MAXIMUM_TEXT_LENGTH,
@@ -199,8 +195,8 @@ describe(`Data Generator`, function () {
     });
   });
 
-  describe(`Likes field`, function () {
-    it(`maximum value is ${dataGenerator.MAXIMUM_LIKES_NUMBER}`, function () {
+  describe(`Likes field`, () => {
+    it(`maximum value is ${dataGenerator.MAXIMUM_LIKES_NUMBER}`, () => {
       assert.equal(
           dataGenerator.generateEntity().likes <=
           dataGenerator.MAXIMUM_LIKES_NUMBER,
@@ -224,10 +220,10 @@ describe(`Data Generator`, function () {
     });
   });
 
-  describe(`Comments field`, function () {
+  describe(`Comments field`, () => {
     it(`maximum comment length is ${
       dataGenerator.MAXIMUM_COMMENT_LENGTH
-    }`, function () {
+    }`, () => {
       assert.equal(
           helpers.checkCommentLength(dataGenerator.generateEntity().comments),
           true
@@ -251,8 +247,8 @@ describe(`Data Generator`, function () {
     });
   });
 
-  describe(`Date field`, function () {
-    it(`returns UNIX timestamp from one of last 7 days`, function () {
+  describe(`Date field`, () => {
+    it(`returns UNIX timestamp from one of last 7 days`, () => {
       assert.equal(
           helpers.checkTimestamp(dataGenerator.generateEntity().date),
           true

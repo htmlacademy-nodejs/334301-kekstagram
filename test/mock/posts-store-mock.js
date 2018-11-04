@@ -25,15 +25,16 @@ class PostsStoreMock {
   }
 }
 
-module.exports = new PostsStoreMock(
-    (() => {
-      const posts = [];
-      posts.push(dataGenerator.generateSpecificEntity());
-      posts.push(dataGenerator.generateEntity());
-      posts.push(dataGenerator.generateEntity());
-      posts.push(dataGenerator.generateEntity());
-      posts.push(dataGenerator.generateEntity());
+module.exports = () =>
+  new PostsStoreMock(
+      (() => {
+        const posts = [];
+        posts.push(dataGenerator.generateSpecificEntity());
+        posts.push(dataGenerator.generateEntity());
+        posts.push(dataGenerator.generateEntity());
+        posts.push(dataGenerator.generateEntity());
+        posts.push(dataGenerator.generateEntity());
 
-      return posts;
-    })()
-);
+        return posts;
+      })()
+  );
