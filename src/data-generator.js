@@ -38,7 +38,7 @@ const generateRandomHashtags = () => {
   const newHashTags = [];
 
   for (let i = 0; i < hashtagsNumber; i++) {
-    const hashtag = `#` + generateRandomText(MAXIMUM_HASHTAG_LENGTH);
+    const hashtag = `#${generateRandomText(MAXIMUM_HASHTAG_LENGTH)}`;
 
     newHashTags.push(hashtag);
   }

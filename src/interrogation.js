@@ -40,7 +40,7 @@ const saveFile = (filePath, data) => {
       }
     });
 
-    filePath = filePath + `/` + DEFAULT_FILE;
+    filePath = `${filePath}/${DEFAULT_FILE}`;
   }
 
   fs.writeFile(filePath, JSON.stringify(data), fileWriteOptions, (writeErr) => {
@@ -95,7 +95,7 @@ const saveEntities = (newData) => {
 
   rl.on(`line`, (newPath) => {
     if (!newPath) {
-      dataPath = DEFAULT_PATH + `/` + DEFAULT_FILE;
+      dataPath = `${DEFAULT_PATH}/${DEFAULT_FILE}`;
     } else {
       dataPath = newPath;
     }

@@ -8,7 +8,7 @@ class ImageStore {
     if (this._bucket) {
       return this._bucket;
     }
-    const dBase = await db.connectToDatabase();
+    const dBase = await db();
     if (!this._bucket) {
       this._bucket = new mongodb.GridFSBucket(dBase, {
         chunkSizeBytes: 512 * 1024,
@@ -39,4 +39,4 @@ class ImageStore {
   }
 }
 
-module.exports = new ImageStore();
+module.exports = () => new ImageStore();

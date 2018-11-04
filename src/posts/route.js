@@ -54,7 +54,7 @@ postsRouter.get(
       }
 
       res.send(
-          await toPage(await postsRouter.postsStore.getAllPosts(), skip, limit)
+          await toPage(await postsRouter.postsStore().getAllPosts(), skip, limit)
       );
     })
 );
@@ -67,7 +67,7 @@ postsRouter.get(
         throw new IllegalArgumentError(`В запросе не указана временная метка`);
       }
 
-      const found = await postsRouter.postsStore.getPost(postDate);
+      const found = await postsRouter.postsStore().getPost(postDate);
       if (!found) {
         throw new NotFoundError(
             `Пост с временной меткой "${postDate}" не найден`
@@ -97,13 +97,12 @@ postsRouter.post(
         body.filetype = image.mimetype;
       }
 
-      await postsRouter.postsStore.save(validate(body));
+      await postsRouter.postsStore().save(validate(body));
 
       if (image) {
-        await postsRouter.imagesStore.save(
-            image.originalname,
-            toStream(image.buffer)
-        );
+        await postsRouter
+        .imagesStore()
+        .save(image.originalname, toStream(image.buffer));
       }
 
       res.send(validate(body));
@@ -118,14 +117,14 @@ postsRouter.get(
         throw new IllegalArgumentError(`В запросе не указана временная метка`);
       }
 
-      const found = await postsRouter.postsStore.getPost(postDate);
+      const found = await postsRouter.postsStore().getPost(postDate);
       if (!found) {
         throw new NotFoundError(
             `Пост с временной меткой "${postDate}" не найден`
         );
       }
 
-      const result = await postsRouter.imagesStore.get(found.filename);
+      const result = await postsRouter.imagesStore().get(found.filename);
       if (!result) {
         throw new NotFoundError(
             `Изображение для поста с временной меткой "${postDate}" не найдено`

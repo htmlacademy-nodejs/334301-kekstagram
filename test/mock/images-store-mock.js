@@ -6,4 +6,4 @@ class MockImageStore {
   async save() {}
 }
 
-module.exports = new MockImageStore();
+module.exports = () => new MockImageStore();
