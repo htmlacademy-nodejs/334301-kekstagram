@@ -4,15 +4,11 @@ const db = require(`../database/db`);
 const logger = require(`../logger`);
 
 const setupCollection = async () => {
-  if (process.argv[2] === `--server`) {
-    const dBase = await db;
+  const dBase = await db.connectToDatabase();
 
-    const collection = dBase.collection(`posts`);
-    collection.createIndex({date: -1}, {unique: true});
-    return collection;
-  } else {
-    return null;
-  }
+  const collection = dBase.collection(`posts`);
+  collection.createIndex({date: -1}, {unique: true});
+  return collection;
 };
 
 class PostsStore {

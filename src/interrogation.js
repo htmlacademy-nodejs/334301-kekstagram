@@ -1,6 +1,6 @@
 "use strict";
 
-let colors = require(`colors/safe`);
+const colors = require(`colors/safe`);
 const readline = require(`readline`);
 const fs = require(`fs`);
 const path = require(`path`);
